@@ -91,9 +91,9 @@
     </div>
 </body>
 <script>
-    var mineList = []
-    var mineCounterList = []
-    var isOpened = []
+    var mineList = [];
+    var mineCounterList = [];
+    var isOpened = [];
     var nRow = 0;
     var nCol = 0;
     var nMines = 0;
@@ -105,12 +105,12 @@
             a.every((val, index) => val === b[index]);
     }
 
-    function genMineList(nRow, nCol, nMines) {
-        return genRandMineList(nRow, nCol, nMines);
-        //return genDebugMineList(nRow, nCol, nMines);
+    function genMineList() {
+        return genRandMineList(); //產生隨機地雷盤面(實際遊戲)
+        //return genDebugMineList(); //產生固定地雷盤面(Debug用)
     }
 
-    function genRandMineList(nRow, nCol, nMines) {
+    function genRandMineList() {
         var mineSet = [];
 
         function randPair() {
@@ -127,7 +127,7 @@
         return mineSet;
     }
 
-    function genDebugMineList(nRow, nCol, nMines) {
+    function genDebugMineList() {
         return [
             [0, 0],
             [0, 1],
@@ -140,313 +140,84 @@
         posArr = id.split("-").map(Number);
         //console.log(posArr)
         //console.log(mineCounterList[posArr[0]][posArr[1]]);
-        function open(posArr) {
-            document.getElementById((posArr[0]) + "-" + (posArr[1])).setAttribute("style",
-                "background-color: #9e9d24;");
-            if (mineCounterList[posArr[0]][posArr[1]] != 0) {
-                document.getElementById((posArr[0]) + "-" + (posArr[1])).innerHTML = mineCounterList[posArr[0]][posArr[
-                    1]];
-            }
-        }
-
-        function checkSurround(posArr) {
-            if (posArr[0] == 0 && posArr[1] == 0) {
-                if ((mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
-                        open([posArr[0] + 1, posArr[1]]);
-                        isOpened.push([posArr[0] + 1, posArr[1]])
-                        checkSurround([posArr[0] + 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
-                        open([posArr[0], posArr[1] + 1]);
-                        isOpened.push([posArr[0], posArr[1] + 1])
-                        checkSurround([posArr[0], posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
-                        open([posArr[0] + 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] + 1])
-                        checkSurround([posArr[0] + 1, posArr[1] + 1])
-                    }
-                }
-            }
-            //上排
-            else if (posArr[0] == 0 && 0 < posArr[1] && posArr[1] < (nCol - 1)) {
-                if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
-                        open([posArr[0], posArr[1] - 1]);
-                        isOpened.push([posArr[0], posArr[1] - 1])
-                        checkSurround([posArr[0], posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
-                        open([posArr[0] + 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] - 1])
-                        checkSurround([posArr[0] + 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
-                        open([posArr[0] + 1, posArr[1]]);
-                        isOpened.push([posArr[0] + 1, posArr[1]])
-                        checkSurround([posArr[0] + 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
-                        open([posArr[0], posArr[1] + 1]);
-                        isOpened.push([posArr[0], posArr[1] + 1])
-                        checkSurround([posArr[0], posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
-                        open([posArr[0] + 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] + 1])
-                        checkSurround([posArr[0] + 1, posArr[1] + 1])
-                    }
-                }
-            }
-            //右上
-            else if (posArr[0] == 0 && posArr[1] == (nCol - 1)) {
-                if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1]] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
-                        open([posArr[0], posArr[1] - 1]);
-                        isOpened.push([posArr[0], posArr[1] - 1])
-                        checkSurround([posArr[0], posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
-                        open([posArr[0] + 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] - 1])
-                        checkSurround([posArr[0] + 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
-                        open([posArr[0] + 1, posArr[1]]);
-                        isOpened.push([posArr[0] + 1, posArr[1]])
-                        checkSurround([posArr[0] + 1, posArr[1]])
-                    }
-                }
-            }
-            //左排
-            else if (0 < posArr[0] && posArr[0] < (nRow - 1) && posArr[1] == 0) {
-                if ((mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
-                        open([posArr[0] - 1, posArr[1]]);
-                        isOpened.push([posArr[0] - 1, posArr[1]])
-                        checkSurround([posArr[0] - 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
-                        open([posArr[0] - 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] + 1])
-                        checkSurround([posArr[0] - 1, posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
-                        open([posArr[0], posArr[1] + 1]);
-                        isOpened.push([posArr[0], posArr[1] + 1])
-                        checkSurround([posArr[0], posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
-                        open([posArr[0] + 1, posArr[1]]);
-                        isOpened.push([posArr[0] + 1, posArr[1]])
-                        checkSurround([posArr[0] + 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
-                        open([posArr[0] + 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] + 1])
-                        checkSurround([posArr[0] + 1, posArr[1] + 1])
-                    }
-                }
-            }
-            //左下
-            else if (posArr[0] == (nRow - 1) && posArr[1] == 0) {
-                if ((mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] + 1] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
-                        open([posArr[0] - 1, posArr[1]]);
-                        isOpened.push([posArr[0] - 1, posArr[1]])
-                        checkSurround([posArr[0] - 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
-                        open([posArr[0] - 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] + 1])
-                        checkSurround([posArr[0] - 1, posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
-                        open([posArr[0], posArr[1] + 1]);
-                        isOpened.push([posArr[0], posArr[1] + 1])
-                        checkSurround([posArr[0], posArr[1] + 1])
-                    }
-                }
-            }
-            //下排
-            else if (posArr[0] == (nRow - 1) && 0 < posArr[1] && posArr[1] < (nCol - 1)) {
-                if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] + 1] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
-                        open([posArr[0], posArr[1] - 1]);
-                        isOpened.push([posArr[0], posArr[1] - 1])
-                        checkSurround([posArr[0], posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
-                        open([posArr[0] - 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] - 1])
-                        checkSurround([posArr[0] - 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
-                        open([posArr[0] - 1, posArr[1]]);
-                        isOpened.push([posArr[0] - 1, posArr[1]])
-                        checkSurround([posArr[0] - 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
-                        open([posArr[0] - 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] + 1])
-                        checkSurround([posArr[0] - 1, posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
-                        open([posArr[0], posArr[1] + 1]);
-                        isOpened.push([posArr[0], posArr[1] + 1])
-                        checkSurround([posArr[0], posArr[1] + 1])
-                    }
-                }
-            }
-            //右下
-            else if (posArr[0] == (nRow - 1) && posArr[1] == (nCol - 1)) {
-                if ((mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] - 1] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
-                        open([posArr[0] - 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] - 1])
-                        checkSurround([posArr[0] - 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
-                        open([posArr[0] - 1, posArr[1]]);
-                        isOpened.push([posArr[0] - 1, posArr[1]])
-                        checkSurround([posArr[0] - 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
-                        open([posArr[0], posArr[1] - 1]);
-                        isOpened.push([posArr[0], posArr[1] - 1])
-                        checkSurround([posArr[0], posArr[1] - 1])
-                    }
-                }
-            }
-            //右排
-            else if (0 < posArr[0] && posArr[0] < (nRow - 1) && posArr[1] == (nCol - 1)) {
-                if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1]] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
-                        open([posArr[0], posArr[1] - 1]);
-                        isOpened.push([posArr[0], posArr[1] - 1])
-                        checkSurround([posArr[0], posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
-                        open([posArr[0] - 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] - 1])
-                        checkSurround([posArr[0] + 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
-                        open([posArr[0] - 1, posArr[1]]);
-                        isOpened.push([posArr[0] - 1, posArr[1]])
-                        checkSurround([posArr[0] - 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
-                        open([posArr[0] + 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] - 1])
-                        checkSurround([posArr[0] + 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
-                        open([posArr[0] + 1, posArr[1]]);
-                        isOpened.push([posArr[0] + 1, posArr[1]])
-                        checkSurround([posArr[0] + 1, posArr[1]])
-                    }
-                }
-            }
-            //中間
-            else {
-                if ((mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
-                    (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
-                    (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
-                ) {
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
-                        open([posArr[0] - 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] - 1])
-                        checkSurround([posArr[0] - 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
-                        open([posArr[0], posArr[1] - 1]);
-                        isOpened.push([posArr[0], posArr[1] - 1])
-                        checkSurround([posArr[0], posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
-                        open([posArr[0] + 1, posArr[1] - 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] - 1])
-                        checkSurround([posArr[0] + 1, posArr[1] - 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
-                        open([posArr[0] - 1, posArr[1]]);
-                        isOpened.push([posArr[0] - 1, posArr[1]])
-                        checkSurround([posArr[0] - 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
-                        open([posArr[0] + 1, posArr[1]]);
-                        isOpened.push([posArr[0] + 1, posArr[1]])
-                        checkSurround([posArr[0] + 1, posArr[1]])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
-                        open([posArr[0] - 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] - 1, posArr[1] + 1])
-                        checkSurround([posArr[0] - 1, posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
-                        open([posArr[0], posArr[1] + 1]);
-                        isOpened.push([posArr[0], posArr[1] + 1])
-                        checkSurround([posArr[0], posArr[1] + 1])
-                    }
-                    if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
-                        open([posArr[0] + 1, posArr[1] + 1]);
-                        isOpened.push([posArr[0] + 1, posArr[1] + 1])
-                        checkSurround([posArr[0] + 1, posArr[1] + 1])
-                    }
-                }
-            }
-        }
         if (mineList.some(arr => arrayEquals(arr, posArr))) {
-            document.getElementById(id).setAttribute("style", "background-color: #ff00ff;");
-            for (i = 0; i < mineList.length; ++i) {
-                document.getElementById(mineList[i][0] + "-" +
-                    mineList[i][1]).setAttribute("style", "background-color: #ff00ff;");
-            }
-            gameOver();
+            gameOver(id);
         } else {
             if (!(isOpened.some(arr => arrayEquals(arr, posArr)))) {
                 open(posArr);
                 isOpened.push(posArr);
                 checkSurround(posArr);
+                //全部非地雷打開了即勝利
+                if (isOpened.length == (nRow * nCol - mineList.length)) {
+                    win();
+                }
+            }
+        }
+    }
+
+    function initMineCounterList() {
+        mineCounterList = Array.from({
+            length: nRow
+        }, () => Array.from({
+            length: nCol
+        }, () => 99));
+    }
+
+    function updateMineCounterList() {
+        for (i = 0; i < nRow; ++i) {
+            for (j = 0; j < nCol; ++j) {
+                var sum = 0;
+                if (!(mineList.some(arr => arrayEquals(arr, [i, j])))) {
+                    // up left
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i - 1, j - 1]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    // up mid
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i - 1, j]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    // up right
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i - 1, j + 1]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    // mid left
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i, j - 1]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    // mid right
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i, j + 1]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    // down left
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i + 1, j - 1]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    // down mid
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i + 1, j]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    // down right
+                    try {
+                        if (mineList.some(arr => arrayEquals(arr, [i + 1, j + 1]))) {
+                            sum += 1;
+                        }
+                    } catch (e) {}
+                    mineCounterList[i][j] = sum;
+                }
             }
         }
     }
@@ -460,71 +231,9 @@
         /*檢查輸入條件start*/
         if ((Number.isInteger(Number(nRow)) && Number(nRow) > 0) && (Number.isInteger(Number(nCol)) && Number(nCol) >
                 0) && (Number.isInteger(Number(nMines)) && Number(nMines) > 0) && (nMines < nRow * nCol)) {
-            mineCounterList = Array.from({
-                length: nRow
-            }, () => Array.from({
-                length: nCol
-            }, () => 99));
-            mineList = genMineList(nRow, nCol, nMines);
-            //console.log(mineList); 印出mineList
-            for (i = 0; i < nRow; ++i) {
-                for (j = 0; j < nCol; ++j) {
-                    var sum = 0;
-                    if (!(mineList.some(arr => arrayEquals(arr, [i, j])))) {
-                        // up left
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i - 1, j - 1]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        // up mid
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i - 1, j]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        // up right
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i - 1, j + 1]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        // mid left
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i, j - 1]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        // mid right
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i, j + 1]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        // down left
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i + 1, j - 1]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        // down mid
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i + 1, j]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        // down right
-                        try {
-                            if (mineList.some(arr => arrayEquals(arr, [i + 1, j + 1]))) {
-                                sum += 1;
-                            }
-                        } catch (e) {}
-                        mineCounterList[i][j] = sum;
-                    }
-                }
-            }
-            //console.log(mineCounterList);
-            //document.getElementById("statusOutput").innerHTML = nRow + ", " + nCol + ", " + nMines;
+            initMineCounterList();
+            mineList = genMineList();
+            updateMineCounterList()
             document.getElementById("genGame").setAttribute("style", "display: none;");
         } else {
             alert("輸入的值不符合規範\n請重新輸入");
@@ -534,9 +243,9 @@
 
         /*產生盤面start*/
         for (i = 0; i < nRow; ++i) {
-            var row = document.getElementById("minesTable").appendChild(document.createElement("tr"));
+            let row = document.getElementById("minesTable").appendChild(document.createElement("tr"));
             for (j = 0; j < nCol; ++j) {
-                var mineEle = row.appendChild(document.createElement("td"))
+                let mineEle = row.appendChild(document.createElement("td"));
                 mineEle.setAttribute("id", i + "-" + j);
                 mineEle.setAttribute("onclick", "openMineMap(this.id)");
             }
@@ -545,7 +254,328 @@
 
     }
 
-    function gameOver() {
+    function checkSurround(posArr) {
+        //左上
+        if (posArr[0] == 0 && posArr[1] == 0) {
+            if ((mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
+                    open([posArr[0] + 1, posArr[1]]);
+                    isOpened.push([posArr[0] + 1, posArr[1]])
+                    checkSurround([posArr[0] + 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
+                    open([posArr[0], posArr[1] + 1]);
+                    isOpened.push([posArr[0], posArr[1] + 1])
+                    checkSurround([posArr[0], posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
+                    open([posArr[0] + 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] + 1])
+                    checkSurround([posArr[0] + 1, posArr[1] + 1])
+                }
+            }
+        }
+        //上排
+        else if (posArr[0] == 0 && 0 < posArr[1] && posArr[1] < (nCol - 1)) {
+            if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
+                    open([posArr[0], posArr[1] - 1]);
+                    isOpened.push([posArr[0], posArr[1] - 1])
+                    checkSurround([posArr[0], posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
+                    open([posArr[0] + 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] - 1])
+                    checkSurround([posArr[0] + 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
+                    open([posArr[0] + 1, posArr[1]]);
+                    isOpened.push([posArr[0] + 1, posArr[1]])
+                    checkSurround([posArr[0] + 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
+                    open([posArr[0], posArr[1] + 1]);
+                    isOpened.push([posArr[0], posArr[1] + 1])
+                    checkSurround([posArr[0], posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
+                    open([posArr[0] + 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] + 1])
+                    checkSurround([posArr[0] + 1, posArr[1] + 1])
+                }
+            }
+        }
+        //右上
+        else if (posArr[0] == 0 && posArr[1] == (nCol - 1)) {
+            if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1]] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
+                    open([posArr[0], posArr[1] - 1]);
+                    isOpened.push([posArr[0], posArr[1] - 1])
+                    checkSurround([posArr[0], posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
+                    open([posArr[0] + 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] - 1])
+                    checkSurround([posArr[0] + 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
+                    open([posArr[0] + 1, posArr[1]]);
+                    isOpened.push([posArr[0] + 1, posArr[1]])
+                    checkSurround([posArr[0] + 1, posArr[1]])
+                }
+            }
+        }
+        //左排
+        else if (0 < posArr[0] && posArr[0] < (nRow - 1) && posArr[1] == 0) {
+            if ((mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
+                    open([posArr[0] - 1, posArr[1]]);
+                    isOpened.push([posArr[0] - 1, posArr[1]])
+                    checkSurround([posArr[0] - 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
+                    open([posArr[0] - 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] + 1])
+                    checkSurround([posArr[0] - 1, posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
+                    open([posArr[0], posArr[1] + 1]);
+                    isOpened.push([posArr[0], posArr[1] + 1])
+                    checkSurround([posArr[0], posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
+                    open([posArr[0] + 1, posArr[1]]);
+                    isOpened.push([posArr[0] + 1, posArr[1]])
+                    checkSurround([posArr[0] + 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
+                    open([posArr[0] + 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] + 1])
+                    checkSurround([posArr[0] + 1, posArr[1] + 1])
+                }
+            }
+        }
+        //左下
+        else if (posArr[0] == (nRow - 1) && posArr[1] == 0) {
+            if ((mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] + 1] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
+                    open([posArr[0] - 1, posArr[1]]);
+                    isOpened.push([posArr[0] - 1, posArr[1]])
+                    checkSurround([posArr[0] - 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
+                    open([posArr[0] - 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] + 1])
+                    checkSurround([posArr[0] - 1, posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
+                    open([posArr[0], posArr[1] + 1]);
+                    isOpened.push([posArr[0], posArr[1] + 1])
+                    checkSurround([posArr[0], posArr[1] + 1])
+                }
+            }
+        }
+        //下排
+        else if (posArr[0] == (nRow - 1) && 0 < posArr[1] && posArr[1] < (nCol - 1)) {
+            if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] + 1] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
+                    open([posArr[0], posArr[1] - 1]);
+                    isOpened.push([posArr[0], posArr[1] - 1])
+                    checkSurround([posArr[0], posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
+                    open([posArr[0] - 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] - 1])
+                    checkSurround([posArr[0] - 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
+                    open([posArr[0] - 1, posArr[1]]);
+                    isOpened.push([posArr[0] - 1, posArr[1]])
+                    checkSurround([posArr[0] - 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
+                    open([posArr[0] - 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] + 1])
+                    checkSurround([posArr[0] - 1, posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
+                    open([posArr[0], posArr[1] + 1]);
+                    isOpened.push([posArr[0], posArr[1] + 1])
+                    checkSurround([posArr[0], posArr[1] + 1])
+                }
+            }
+        }
+        //右下
+        else if (posArr[0] == (nRow - 1) && posArr[1] == (nCol - 1)) {
+            if ((mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] - 1] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
+                    open([posArr[0] - 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] - 1])
+                    checkSurround([posArr[0] - 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
+                    open([posArr[0] - 1, posArr[1]]);
+                    isOpened.push([posArr[0] - 1, posArr[1]])
+                    checkSurround([posArr[0] - 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
+                    open([posArr[0], posArr[1] - 1]);
+                    isOpened.push([posArr[0], posArr[1] - 1])
+                    checkSurround([posArr[0], posArr[1] - 1])
+                }
+            }
+        }
+        //右排
+        else if (0 < posArr[0] && posArr[0] < (nRow - 1) && posArr[1] == (nCol - 1)) {
+            if ((mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1]] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
+                    open([posArr[0], posArr[1] - 1]);
+                    isOpened.push([posArr[0], posArr[1] - 1])
+                    checkSurround([posArr[0], posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
+                    open([posArr[0] - 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] - 1])
+                    checkSurround([posArr[0] + 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
+                    open([posArr[0] - 1, posArr[1]]);
+                    isOpened.push([posArr[0] - 1, posArr[1]])
+                    checkSurround([posArr[0] - 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
+                    open([posArr[0] + 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] - 1])
+                    checkSurround([posArr[0] + 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
+                    open([posArr[0] + 1, posArr[1]]);
+                    isOpened.push([posArr[0] + 1, posArr[1]])
+                    checkSurround([posArr[0] + 1, posArr[1]])
+                }
+            }
+        }
+        //中間
+        else {
+            if ((mineCounterList[posArr[0] - 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] - 1] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1]] != 99) &&
+                (mineCounterList[posArr[0] - 1][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0]][posArr[1] + 1] != 99) &&
+                (mineCounterList[posArr[0] + 1][posArr[1] + 1] != 99)
+            ) {
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] - 1])))) {
+                    open([posArr[0] - 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] - 1])
+                    checkSurround([posArr[0] - 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] - 1])))) {
+                    open([posArr[0], posArr[1] - 1]);
+                    isOpened.push([posArr[0], posArr[1] - 1])
+                    checkSurround([posArr[0], posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] - 1])))) {
+                    open([posArr[0] + 1, posArr[1] - 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] - 1])
+                    checkSurround([posArr[0] + 1, posArr[1] - 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1]])))) {
+                    open([posArr[0] - 1, posArr[1]]);
+                    isOpened.push([posArr[0] - 1, posArr[1]])
+                    checkSurround([posArr[0] - 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1]])))) {
+                    open([posArr[0] + 1, posArr[1]]);
+                    isOpened.push([posArr[0] + 1, posArr[1]])
+                    checkSurround([posArr[0] + 1, posArr[1]])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] - 1, posArr[1] + 1])))) {
+                    open([posArr[0] - 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] - 1, posArr[1] + 1])
+                    checkSurround([posArr[0] - 1, posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0], posArr[1] + 1])))) {
+                    open([posArr[0], posArr[1] + 1]);
+                    isOpened.push([posArr[0], posArr[1] + 1])
+                    checkSurround([posArr[0], posArr[1] + 1])
+                }
+                if (!(isOpened.some(arr => arrayEquals(arr, [posArr[0] + 1, posArr[1] + 1])))) {
+                    open([posArr[0] + 1, posArr[1] + 1]);
+                    isOpened.push([posArr[0] + 1, posArr[1] + 1])
+                    checkSurround([posArr[0] + 1, posArr[1] + 1])
+                }
+            }
+        }
+    }
+
+    function open(posArr) {
+        document.getElementById((posArr[0]) + "-" + (posArr[1])).setAttribute("style",
+            "background-color: #9e9d24;");
+        //如果周遭有地雷的話，顯示地雷的數量
+        if (mineCounterList[posArr[0]][posArr[1]] != 0) {
+            document.getElementById((posArr[0]) + "-" + (posArr[1])).innerHTML = mineCounterList[posArr[0]][posArr[
+                1]];
+        }
+    }
+
+    function win() {
+        stopClick();
+        document.getElementById("clearGame").setAttribute("style", "display: unset;");
+        document.getElementById("statusOutput").innerHTML = "You Win!";
+    }
+
+    function stopClick() {
+        //停止盤面點選
+        for (i = 0; i < nRow; ++i) {
+            for (j = 0; j < nCol; ++j) {
+                let mineEle = document.getElementById(i + "-" + j);
+                mineEle.removeAttribute("onclick");
+            }
+        }
+    }
+
+    function gameOver(id) {
+        //將所有地雷顯示出來
+        mineList.forEach(function (element) {
+            let mineEle = document.getElementById(element[0] + "-" +
+                element[1]);
+            mineEle.setAttribute("style", "background-color: #ff00ff;");
+        });
+        stopClick();
         document.getElementById("statusOutput").innerHTML = "Game Over!";
         document.getElementById("clearGame").setAttribute("style", "display: unset;");
     }
